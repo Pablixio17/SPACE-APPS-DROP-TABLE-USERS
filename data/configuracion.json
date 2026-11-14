@@ -1,0 +1,770 @@
+{
+  "version": "flame-freefall-2.0.0",
+  "source_sha256": "b88abcca53d4a1a2d44e032ddd07b9269e4d263145d34747cc5a10cdb6bd1584",
+  "column_aliases": {
+    "test_id": [
+      "As Run Test #",
+      "Test_ID",
+      "Test ID",
+      "Test",
+      "Test#",
+      "Test #",
+      "SAME Test #",
+      "FLEX Test #",
+      "Flex Number",
+      "Run_ID"
+    ],
+    "fuel": [
+      "Fuel",
+      "Fuel Bottle",
+      "Fuel Type",
+      "Sample (Fuel Type)"
+    ],
+    "material": [
+      "Fuel Sample Material",
+      "Sample Material",
+      "Sample Type",
+      "Material"
+    ],
+    "hardware": [
+      "Hardware",
+      "Hardware Description"
+    ],
+    "oxygen_fraction": [
+      "Oxygen Mole Fraction",
+      "XO2",
+      "X_O2",
+      "O2_conc",
+      "Oxygen (%)",
+      "Oxygen Conc (percent)",
+      "Calibrated initial O2 % by vol",
+      "O initial ambient composition; mole fraction",
+      "Oxygen",
+      "XO2 before test",
+      "XO2 (init)",
+      "Atmosphere*"
+    ],
+    "pressure_kpa": [
+      "pmean (atm)",
+      "mean pressure (atm)",
+      "Ambient Pressure (atm)",
+      "Pressure",
+      "approx p (bar)",
+      "Ambient pressure; mmHg",
+      "Pressure (kPa)",
+      "Pressure (psi)",
+      "Pressure (bar)"
+    ],
+    "fuel_flow_mg_s": [
+      "Fuel Rate (mg/s)",
+      "HC Fuel Rate (mg/s)",
+      "mfuel (mg/s)",
+      "mHC (mg/s)",
+      "HC burnrate (mg/s)"
+    ],
+    "airflow_cm_s": [
+      "Air Rate (cm/s)",
+      "Air Flow (cm/s)",
+      "Flow Velocity (cm/s)",
+      "Inlet velocity (cm/s)"
+    ],
+    "droplet_initial_diameter_mm": [
+      "Initial Droplet Diameter (mm)",
+      "Droplet initial diameter; mm",
+      "Droplet Diameter (mm)",
+      "Droplet Radius (mm)"
+    ],
+    "burn_time_s": [
+      "Burn time (sec)",
+      "Burn time; s",
+      "Burn time (s)"
+    ],
+    "duration_s": [
+      "Duration (sec)",
+      "Duration (seconds)",
+      "Test duration (sec)"
+    ]
+  },
+  "fuel_aliases": {
+    "c3h8": "propane",
+    "propane": "propane",
+    "propano": "propane",
+    "c2h4": "ethylene",
+    "ethylene": "ethylene",
+    "c2h6": "ethane",
+    "ethane": "ethane",
+    "ch4": "methane",
+    "methane": "methane",
+    "methanol": "methanol",
+    "heptane": "heptane",
+    "c12h26": "n-dodecane",
+    "n dodecane": "n-dodecane",
+    "butane": "butane",
+    "propylene": "propylene",
+    "h2": "hydrogen",
+    "ethanol": "ethanol",
+    "isooctane": "iso-octane",
+    "iso octane": "iso-octane",
+    "n octane": "n-octane",
+    "decane": "decane"
+  },
+  "weights": {
+    "s_atm": 0.35,
+    "s_seg": 0.3,
+    "s_grav": 0.2,
+    "s_mat": 0.15
+  },
+  "lunar_envelope": {
+    "pressure_max_psi": 10.2,
+    "pressure_max_kpa": 70.3265243903136,
+    "oxygen_min_pct": 30
+  },
+  "study_links": [
+    {
+      "flight": "PSI-69",
+      "ground": "PSI-117",
+      "both_present": false
+    },
+    {
+      "flight": "PSI-69",
+      "ground": "PSI-142",
+      "both_present": true
+    },
+    {
+      "flight": "PSI-25",
+      "ground": "PSI-62",
+      "both_present": false
+    },
+    {
+      "flight": "PSI-26",
+      "ground": "PSI-62",
+      "both_present": false
+    },
+    {
+      "flight": "PSI-102",
+      "ground": "PSI-115",
+      "both_present": false
+    },
+    {
+      "flight": "PSI-107",
+      "ground": "PSI-60",
+      "both_present": false
+    }
+  ],
+  "source_inventory": {
+    "data/raw/PSI-10/Experimental table/PSI-10_Experimental table_Flame Design_Inverse Flame.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "97933ee9ae0b9ebc6b948a67485a0fe2f8218f753253a4f2be93c40d374c44e4"
+    },
+    "data/raw/PSI-10/Experimental table/PSI-10_Experimental table_Flame Design_Normal Flame.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "4a663292bd3f65201943cc71bd661a70383639276a9176f64105b285bf0b6deb"
+    },
+    "data/raw/PSI-101/Experimental table/PSI-101_Experimental table_SAME-R.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "87164b7dc9168a4273c159f7a9f23699afbd06ad97b77974377e79b9bf8a3bef"
+    },
+    "data/raw/PSI-102/Experimental table/PSI-102_Experimental table_SAME.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "268d1e121d2f211b124407dd32b9475617bd269ede2c2d1749441da3e949a2af"
+    },
+    "data/raw/PSI-106/Experimental table/PSI-106_Experimental table_Slice.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "89ef980810ca6d9aa8be817b42e36cd2adff23f5e9058361b5a33d18b4363f4d"
+    },
+    "data/raw/PSI-107/Experimental table/PSI-107_Experimental table_Spice.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "fb0d7e60cf5367afb429089e9901d27288f78038efd26c8de1db4fbe04117136"
+    },
+    "data/raw/PSI-108/Experimental table/PSI-108_Experimental table_STDCE-1.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "c883ab3bc89cadf870d97b0f5d9c533119e1827d788deb0f6e28e59317a8535a"
+    },
+    "data/raw/PSI-108/Experimental table/PSI-108_Experimental table_STDCE-1_1_.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "9d403958984512828ade3110691f7bfc5ba1c704ef42b1093edb7fec1e2df9c7"
+    },
+    "data/raw/PSI-142/Experimental table/PSI-142_Experimental table_Data Summary Table.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "c66d135b0053590d239f06b9e8627d826e3d726b8443fd2cbccc37484b6a8e7f"
+    },
+    "data/raw/PSI-159/Experimental table/PSI-159_Experimental table_CFI-G_Inverse Flames.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "d4d44f8b9896936728748e34d1b6ad0812032a92fa5289599b708c138e3a9b39"
+    },
+    "data/raw/PSI-159/Experimental table/PSI-159_Experimental table_CFI-G_Normal Flames.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "d95a621c3fbd27d204dd32ed29fa17d68f2b779d6a523cde8479ed7ebaa5251a"
+    },
+    "data/raw/PSI-20/Experimental table/PSI-20_Experimental table_ACME BRE.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "4aa5d3f98708ceacced5c620d46858b9965f8d4d941b203229f46467d53e5ab7"
+    },
+    "data/raw/PSI-21/Experimental table/PSI-21_Experimental table_CLD Flame.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "9fafbc5b3dddaf715ce8025ed9154ce297803f7b69a935f077ec26c8249e44c0"
+    },
+    "data/raw/PSI-22/Experimental table/PSI-22_Experimental table_ACME E-FIELD Flames.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "69090c357b83ae38d161d29001d1d32b40fd77b13324ca6585ee990cdceef524"
+    },
+    "data/raw/PSI-23/Experimental table/PSI-23_Experimental table_ACME s-Flame.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "16cd10f50bd2e962887c8eb4077e5a9b3e790c78de8e0361c0b77e19300be7cf"
+    },
+    "data/raw/PSI-25/Experimental table/PSI-25_Experimental table_BASS-II.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "71e792bf6b5fb5ea620c5dd70fbbac05515992e12aefcf5dff47312caa48c042"
+    },
+    "data/raw/PSI-26/Experimental table/PSI-26_Experimental table_BASS.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "ccfc3c54d948b64a1c5d2596a63c7c8019e51df0c91a1d62f039f48fa28c300f"
+    },
+    "data/raw/PSI-39/Experimental table/PSI-39_Experimental table_CFI.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "fb898e28762353aa132c16b886dbd207a024b1dd3c9bed5928d70d8036d2ec7e"
+    },
+    "data/raw/PSI-47/Experimental table/PSI-47_Experimental table_DAFT.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "d9d1a436c6e7bbc410b433e04575fe7dedaff763b5237d688089929b7393b5c0"
+    },
+    "data/raw/PSI-68/Experimental table/PSI-68_Experimental table_Flex2.csv": {
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "cc57ad1bd9977aa13e7ac6c3aa618303012686e232b36c052c6a9f1a74e5f528"
+    },
+    "data/raw/PSI-69/Experimental table/PSI-69_Experimental table_FLEX.csv": {
+      "encoding": "cp1252",
+      "delimiter": ",",
+      "header_index": 0,
+      "metadata": {},
+      "sha256": "37c88ce8ae9391b7544ff630a45ce87543d04d317cdbfbed104fe7d5c27e1b96"
+    }
+  },
+  "metrics": {
+    "rows": 2887,
+    "columns": 79,
+    "scopes": {
+      "test": 1418,
+      "test_observation": 469,
+      "study_summary": 139,
+      "empty_source_row": 861
+    },
+    "irl_status": {
+      "incomplete": 1843,
+      "complete": 140,
+      "excluded": 40,
+      "empty_source_row": 861,
+      "invalid_input": 3
+    },
+    "rankable": 140,
+    "duplicate_rows": 50,
+    "horizontal_merges": 38,
+    "recovered_doi_rows": 8,
+    "source_csvs": 21,
+    "changed_cells_excluding_empty_to_NaN": 16885,
+    "time_series_detected": 0,
+    "pdf_texts_processed": 0,
+    "unique_tests": 1532,
+    "multi_observation_tests": 128
+  },
+  "decisions_es": [
+    "Las 2887 filas se conservan. Los valores originales modificados constan en cambios.csv y source_values_json conserva todas las celdas del CSV fuente.",
+    "NaN es el marcador literal de datos ausentes, no aplicables o no deducibles. Rangos y conjuntos no se sustituyen por el primer numero: se guardan limites y numeric_details_json.",
+    "Operadores y errores se conservan en numeric_details_json. El filtro lunar no trata desigualdades ni valores aproximados como mediciones exactas.",
+    "Las 861 filas vacias se retienen y excluyen del ranking; no se les inyectan combustibles ni hardware.",
+    "No se detectaron series temporales en los 21 CSV experimentales inspeccionados: GMT ignition y Flame Off son eventos de inicio/fin, no muestras por segundo.",
+    "Se unieron horizontalmente las dos exportaciones de PSI-108 por Run+Test con validacion uno-a-uno. Las discrepancias quedan en merge_conflicts_json. No se agregan 38 observaciones duplicadas.",
+    "No se unen tablas Normal Flame e Inverse Flame por su pertenencia a una carpeta: son ensayos de configuraciones distintas.",
+    "SPICE se agrupa por dia GMT e instante de ignicion dentro del archivo. Varias filas cambian condiciones dentro de un mismo evento sin tiempos de muestreo: se conservan como test_observation. tests_maestra.csv agrega media aritmetica, minimo y maximo por ensayo, sin ponderacion temporal y sin sumar duraciones. Los duplicados exactos se conservan en el detalle y no se cuentan en las medias.",
+    "ACME usa clase gas y CIR-ACME por contexto; la especie quimica desconocida queda NaN. FLEX/CFI de gotas usan clase liquid. PSI-10 inverso permite inferir ethylene por las columnas XC2H4.",
+    "PSI-23 aporta aproximadamente 1 atm en sus notas; se inyecta como valor aproximado con procedencia. No se rellenan presiones ISS genericas no documentadas.",
+    "PSI-108/181 se excluyen segun instrucciones; PSI-47 se excluye adicionalmente por calibracion con polvo, no combustion.",
+    "IRL es relevancia segun las reglas del usuario, no probabilidad de incendio ni certificacion NASA-STD-6001. No se aplica un aumento universal de inflamabilidad del 40%.",
+    "Sin regla S_seg o S_mat se deja NaN y el IRL incompleto. No se renormalizan los pesos.",
+    "Se usa 10.2 psi como umbral principal en lugar de la aproximacion 0.69 atm. La categoria de cabina estandar admite 14.7 +/-1 psi y 21 +/-1 puntos porcentuales de O2 como decision de clasificacion.",
+    "El contexto gravitacional y las envolventes de estudio no equivalen a mediciones de cada ensayo; no se interpola gravedad sin observaciones emparejadas y modelo.",
+    "Los PDF se indexan por ruta relativa del experimento sin abrir ni extraer contenido. Los DOI se extraen exclusivamente de columnas de referencia de los CSV.",
+    "Las referencias [1]/[2] del documento de instrucciones no estan desarrolladas; las reglas contextuales se identifican como aportadas por el usuario."
+  ],
+  "field_schema": {
+    "record_id": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "investigation_id": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "investigation_name": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "experiment_type": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "grain_type": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "source_file": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "source_row": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "test_id": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "test_date": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "flame_type": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "fuel": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "fuel_class": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "material": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "hardware": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "focus": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "oxygen_fraction": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "pressure_kpa": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "fuel_flow_mg_s": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "airflow_cm_s": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "droplet_initial_diameter_mm": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "burn_time_s": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "duration_s": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "ignition_success": {
+      "type": "boolean",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "inference_notes": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "data_history_path": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "reference_pdf_path": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "source_encoding": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "source_values_json": {
+      "type": "json",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "source_files": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "merge_status": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "merge_conflicts_json": {
+      "type": "json",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "record_scope": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "test_uid": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "duplicate_of_record_id": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "oxygen_pct": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "pressure_psi": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "pressure_atm": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "oxygen_fraction_min": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "oxygen_fraction_max": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "pressure_kpa_min": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "pressure_kpa_max": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "droplet_initial_diameter_mm_min": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "droplet_initial_diameter_mm_max": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "airflow_cm_s_min": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "airflow_cm_s_max": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "is_lunar_atmosphere": {
+      "type": "boolean",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "is_combustion_core": {
+      "type": "boolean",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "exclusion_reason": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "study_environment": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "gravity_regime": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "partial_gravity_emulation": {
+      "type": "boolean",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "gravity_interpolation_index": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "gravity_interpolation_status": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "safety_pillar": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "material_category": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "flow_regime": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "visual_phenomena": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "linked_investigation_ids": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "available_linked_investigation_ids": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "missing_linked_investigation_ids": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "doi": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "pdf_reference_count": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "s_atm": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "s_seg": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "s_grav": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "s_mat": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "irl_score": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "irl_status": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "irl_component_coverage": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "include_in_safety_ranking": {
+      "type": "boolean",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "scoring_basis_json": {
+      "type": "json",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "study_pressure_min_atm": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "study_pressure_max_atm": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "study_oxygen_min_pct": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "study_oxygen_max_pct": {
+      "type": "number",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "data_quality_flags": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "numeric_details_json": {
+      "type": "json",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "field_provenance_json": {
+      "type": "json",
+      "missing_value": "NaN",
+      "nullable": true
+    },
+    "rules_version": {
+      "type": "string",
+      "missing_value": "NaN",
+      "nullable": true
+    }
+  },
+  "profile_fields": {
+    "student": [
+      "gravity_regime",
+      "fuel_class",
+      "visual_phenomena",
+      "partial_gravity_emulation"
+    ],
+    "safety_engineer": [
+      "is_lunar_atmosphere",
+      "safety_pillar",
+      "material_category",
+      "pressure_psi",
+      "oxygen_pct",
+      "irl_score",
+      "irl_status"
+    ],
+    "cfd_researcher": [
+      "hardware",
+      "flow_regime",
+      "available_linked_investigation_ids",
+      "doi",
+      "numeric_details_json"
+    ]
+  }
+}
