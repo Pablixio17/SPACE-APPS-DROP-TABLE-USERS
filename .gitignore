@@ -1,0 +1,93 @@
+# --- Byte-compiled / optimizados / archivos DLL ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Extensiones en C ---
+*.so
+
+# --- Distribución y empaquetado ---
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- Entornos virtuales ---
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# --- Variables de entorno y secretos ---
+*.env
+*.env.local
+!.env.example
+
+# --- Gestores de paquetes y herramientas modernas ---
+.pdm.toml
+.pdm-python
+.pdm-build/
+.poetry/
+.uv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# --- Pruebas, cobertura y linters ---
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# --- Jupyter Notebook ---
+.ipynb_checkpoints
+
+# --- Frameworks (Django / Flask / FastAPI) ---
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+instance/
+.webassets-cache
+
+# --- IDEs y editores ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Sistema Operativo ---
+.DS_Store
+Thumbs.db
