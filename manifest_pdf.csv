@@ -1,0 +1,19 @@
+investigation_id,title,priority,include_categories,allowed_extensions,max_file_mb,enabled
+PSI-26,Burning and Suppression of Solids (BASS),1,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-25,Burning and Suppression of Solids-II (BASS-II),1,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-98,Spacecraft Fire Safety Experiment-I (SAFFIRE-I),1,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-99,Spacecraft Fire Safety Experiment-II (SAFFIRE-II),1,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-100,Spacecraft Fire Safety Experiment-III (SAFFIRE-III),1,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-102,Smoke and Aerosol Measurement Experiment (SAME),1,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-101,Smoke Aerosol Measurement Experiment-Reflight (SAME-R),1,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-69,Flame Extinguishment Experiment (FLEX),1,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-68,Flame Extinguishment Experiment-2 (FLEX-2),1,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-107,Smoke Point In Co-flow Experiment (SPICE),2,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-106,Structure and Liftoff In Combustion Experiment (SLICE),2,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-159,ACME Cool Flames Investigation with Gases (CFI-G),2,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-20,ACME Burning Rate Emulator (BRE),2,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-21,ACME Coflow Laminar Diffusion Flame (CLD Flame),2,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-22,ACME Electric-Field Effects on Laminar Diffusion Flames (E-FIELD Flames),2,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-23,ACME Structure and Response of Spherical Diffusion Flames (s-Flame),2,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-39,Cool Flames Investigation (CFI),2,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents;Raw Data",".csv;.xlsx;.xls",900,true
+PSI-62,Concurrent Flame Spread Modeling using BASS Experiments,3,"Investigation Metadata Files;Experimental table;Analyzed Data;Reports;Science Documents",".csv;.xlsx;.xls",900,true
