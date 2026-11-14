@@ -1,0 +1,6 @@
+API ChatGPT con Python
+
+CSVs y PDFs //raw data
+Parametros del usuario --> Filtrado de info por agente IA --> Archivo parseado con info --> Mostrar por pantalla (web python)
+  |--> busqueda, etiquetas, prompt...?                          |--> json, csv...?
+                                                                       |--> graficas, porcentajes, consideraciones...?
