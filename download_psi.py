@@ -27,6 +27,7 @@ SITE_ROOT = "https://psi.nasa.gov/physci/repo/"
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36"
 BUFFER_SIZE = 1024 * 1024
 MAX_RETRIES = 3
+ALLOWED_EXTENSIONS = {".csv", ".xlsx", ".xls"}
 
 
 def http_request(url: str, *, data: bytes | None = None, headers: dict | None = None):
@@ -124,7 +125,6 @@ def matches_target(file: dict, target: dict) -> bool:
         for part in target.get("include_categories", "").split(";")
         if part.strip()
     }
-    extensions = {part.strip().lower() for part in target.get("allowed_extensions", "").split(";") if part.strip()}
     extension = Path(file["filename"].lower()).suffix
     folder = PurePosixPath(path_lower).parts[0] if PurePosixPath(path_lower).parts else ""
     category_aliases = {
@@ -135,14 +135,9 @@ def matches_target(file: dict, target: dict) -> bool:
     for category in categories:
         permitted_folders.update(category_aliases.get(category, {category}))
     category_match = folder in permitted_folders
-    extension_match = extension in extensions
+    extension_match = extension in ALLOWED_EXTENSIONS
 
-    # Metadata bundles are normally ZIP files; other ZIP archives are excluded
-    # to avoid silently pulling image/video collections with the tables.
-    metadata_zip = extension == ".zip" and folder == "metadata"
     if not category_match:
-        return False
-    if extension == ".zip" and not metadata_zip:
         return False
     if not extension_match:
         return False
@@ -159,20 +154,6 @@ def matches_target(file: dict, target: dict) -> bool:
 def safe_destination(investigation_id: str, relative_path: str) -> Path:
     parts = [re.sub(r"[^A-Za-z0-9._ -]", "_", part) for part in PurePosixPath(relative_path).parts]
     return RAW_ROOT / investigation_id / Path(*parts)
-
-
-def write_context(investigation_id: str, title: str, version: str, count: int) -> None:
-    folder = RAW_ROOT / investigation_id
-    folder.mkdir(parents=True, exist_ok=True)
-    text = (
-        f"NASA PSI investigation: {investigation_id}\n"
-        f"Title: {title}\n"
-        f"PSI version discovered: {version}\n"
-        f"Selected files in this run: {count}\n"
-        f"Source: {SITE_ROOT}data/investigations/{investigation_id}\n"
-        "The original file names and paths are preserved in psi_download_manifest.csv.\n"
-    )
-    (folder / "README_CONTEXT.txt").write_text(text, encoding="utf-8")
 
 
 def write_csv(path: Path, rows: list[dict], fieldnames: list[str]) -> None:
@@ -220,6 +201,9 @@ def resolve_download_url(file: dict) -> str:
 
 
 def download_file(file: dict) -> None:
+    if Path(file.get("filename", "").lower()).suffix not in ALLOWED_EXTENSIONS:
+        file["status"] = "skipped_extension"
+        return
     destination = safe_destination(file["investigation_id"], file["relative_path"])
     destination.parent.mkdir(parents=True, exist_ok=True)
     try:
@@ -277,7 +261,11 @@ def main() -> int:
             return 2
         with output_manifest.open(newline="", encoding="utf-8") as file:
             rows = list(csv.DictReader(file))
-        selected = [row for row in rows if row.get("status") in {"selected", "download_error"}]
+        selected = [
+            row for row in rows
+            if row.get("status") in {"selected", "download_error"}
+            and Path(row.get("filename", "").lower()).suffix in ALLOWED_EXTENSIONS
+        ]
     else:
         targets = load_targets()
         selected = []
@@ -308,7 +296,6 @@ def main() -> int:
             selected.extend(matches)
             downloadable = sum(item.get("status") == "selected" for item in matches)
             print(f"  {len(discovered)} archivos listados; {downloadable} seleccionados; {len(matches) - downloadable} omitidos por tamaño.")
-            write_context(investigation_id, title, version, len(matches))
             time.sleep(0.5)
 
         RAW_ROOT.mkdir(parents=True, exist_ok=True)
