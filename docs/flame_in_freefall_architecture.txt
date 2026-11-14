@@ -1,0 +1,69 @@
+================================================================================
+PROYECTO: FLAME IN FREEFALL - ARQUITECTURA LÓGICA Y MOTOR DE SCORING LUNAR
+FUENTES: NASA Space Apps Challenge 2026 [1] & NASA PSI Data Repository [2]
+================================================================================
+
+1. ARQUITECTURA LÓGICA DEL SISTEMA (PIPELINE DE DATOS E INTELIGENCIA)
+--------------------------------------------------------------------------------
+El sistema se divide en tres capas desacopladas para garantizar integridad científica y velocidad de respuesta:
+
+A. Capa de Ingesta y Normalización (Backend / ETL):
+   - Depuración Automática: Etiqueta y aísla los registros no pertenecientes a combustión pura (PSI-181 en Ciencia de Materiales y PSI-108 en Física de Fluidos) bajo una bandera `is_combustion_core: false`, evitando contaminar los cálculos de riesgo [2].
+   - Estandarización de Unidades: Convierte todas las presiones a psi y kPa (transformando los rangos de 0.5-3.0 atm de PSI-68 y 0.25-5 atm de PSI-39) [2], y unifica concentraciones de O2 a porcentaje volumétrico (%) y fracción molar (X_O2) [1, 2].
+   - Grafo Relacional Vuelo <-> Tierra: Vincula mediante claves foráneas cada experimento espacial con su estudio terrestre de validación (ej. PSI-69 FLEX -> PSI-117 OpenFOAM y PSI-142 Counterflow; PSI-25/26 BASS -> PSI-62 FGM; PSI-102 SAME -> PSI-115 Navier-Stokes; PSI-107 SPICE -> PSI-60 Óptica) [2].
+
+B. Motor de Puntuación e Inferencia SI (Scoring Engine):
+   - Evalúa cada registro en tiempo real frente a las envolventes operacionales de hábitats espaciales (ISS, bases lunares, rovers presurizados y misiones a Marte) [1] y calcula el índice de interpolación entre 0g y 1g para acotar la ausencia actual de datos en gravedad parcial [1].
+
+C. Capa de Presentación Adaptativa (Frontend por Roles):
+   - Selector de perfil en la barra superior que reconfigura dinámicamente los paneles, filtros y unidades sin duplicar la base de datos.
+
+--------------------------------------------------------------------------------
+2. VISTAS ESPECIALIZADAS POR PERFIL DE USUARIO
+--------------------------------------------------------------------------------
+* PERFIL 1: ESTUDIANTES (Educativo y Conceptual)
+  - Objetivo: Comprender la física fundamental de la llama sin convección natural (1g vs. 0g) [1].
+  - Filtros Activos: Nivel de gravedad (0g vuelo vs. 1g tierra), estado del combustible (sólido, líquido, gas) y fenómeno visual (llama esférica, llama fría, hollín) [1, 2].
+  - Visualización Clave: Comparador Visual Interactivo 1g vs. 0g (llama alargada vs. esfera azul difusiva) y simulación de gravedad parcial mediante campos eléctricos en PSI-22 (E-FIELD Flames) [1, 2].
+  - Exportación: Fichas divulgativas, glosario de hardware ISS y módulo de Transferencia Tecnológica a la Tierra (extintores de niebla fina y detectores de humo) [1].
+
+* PERFIL 2: INGENIEROS DE SEGURIDAD AEROESPACIAL
+  - Objetivo: Evaluar riesgos de ignición, toxicidad por humo y eficacia de extinción en cabinas [1].
+  - Filtros Activos: Régimen Lunar (<= 10.2 psi y >= 30% O2), Pilar de Seguridad (Prevención, Detección, Supresión) y Material (tejidos, espumas) [1, 2].
+  - Visualización Clave: Matriz de Envolvente de Seguridad (Presión en psi vs. % O2) destacando la zona crítica lunar (+40% inflamabilidad frente a Tierra), mapeando PSI-159 (hasta 85% O2) y PSI-68 (10-40% O2) [1, 2].
+  - Exportación: Generador de Informes de Cumplimiento y Riesgo frente al estándar NASA-STD-6001 usando datos de BASS y SAFFIRE [1, 2].
+
+* PERFIL 3: INVESTIGADORES CFD Y MODELADO
+  - Objetivo: Calibrar modelos numéricos, validar cinética química y descargar condiciones de contorno [1, 2].
+  - Filtros Activos: Plataforma de hardware (CIR-ACME, CIR-MDCA, MSG-SPICE, Cygnus), tipo de flujo (quieto vs. forzado) y disponibilidad de pares Vuelo-Simulación [1, 2].
+  - Visualización Clave: Mapa de Acoplamiento Experimental-CFD (discrepancias de hollín en PSI-60, extinción radiativa en PSI-142 y crecimiento de aerosoles en PSI-115) [2].
+  - Exportación: Descarga directa de Archivos de Contorno (JSON/CSV) y botón de Exportación de Cita DOI obligatorio según política SMD Open Source Science [2].
+
+--------------------------------------------------------------------------------
+3. REGLAS DE PUNTUACIÓN (SCORING) PARA EL RANKING DE RELEVANCIA LUNAR
+--------------------------------------------------------------------------------
+Fórmula del Índice de Relevancia Lunar (IRL_i) normalizado de 0 a 100 puntos:
+IRL_i = (0.35 * S_atm) + (0.30 * S_seg) + (0.20 * S_grav) + (0.15 * S_mat)
+
+A. Coincidencia de Envolvente Atmosférica (S_atm - Peso 35%):
+   - 100 pts: Prueba presiones reducidas (<= 10.2 psi / <= 0.69 atm) y atmósferas enriquecidas (>= 30% O2) [1], o cubre el régimen hiperóxico extremo (PSI-68 FLEX-2 con 0.5-3.0 atm y 10-40% O2; PSI-159 ACME CFI-G hasta 85% O2) [1, 2].
+   - 60 pts: Evalúa rangos de baja presión o dilución con inertes sin cubrir ambos umbrales simultáneamente (PSI-39 CFI a 0.25-5 atm; PSI-69 FLEX con dilución CO2/He) [2].
+   - 20 pts: Ensayos realizados únicamente a presión estándar de cabina ISS (14.7 psi / ~21% O2) o sin datos atmosféricos explícitos.
+
+B. Alineación con Pilares de Seguridad de Cabina (S_seg - Peso 30%):
+   - 100 pts: Impacto operacional directo en Prevención a gran escala (SAFFIRE-I/II/III), Detección de humo (SAME, SAME-R) o Supresión activa (FLEX, FLEX-2) [1, 2].
+   - 65 pts: Estabilidad de llama bajo ventilación forzada (SLICE, SPICE) o emulación de tasa de quema de sólidos (ACME BRE) [1, 2].
+   - 25 pts: Cinética química fundamental o formación de hollín sin aplicación directa a sistemas de protección (ACME s-Flame, ACME CLD Flame) [2].
+
+C. Representatividad Gravitacional y Escala (S_grav - Peso 20%):
+   - 100 pts: Ensayo en microgravedad (0g) con simulación activa de gravedad parcial (PSI-22 ACME E-FIELD Flames mediante campos eléctricos) [1, 2] o pruebas a escala real de vehículo (SAFFIRE en Cygnus) [2].
+   - 75 pts: Experimentos de vuelo en microgravedad en racks de la ISS (CIR, MSG) [1, 2].
+   - 40 pts: Investigaciones en tierra (Ground Investigations) que validan modelos con datos de vuelo (PSI-62, PSI-115, PSI-117, PSI-142, PSI-60) [2].
+
+D. Relevancia de Materiales de Cabina (S_mat - Peso 15%):
+   - 100 pts: Combustión o pirólisis de materiales sólidos presentes en trajes, equipos o revestimientos espaciales: tejidos compuestos (BASS algodón/fibra de vidrio, SAFFIRE Sibal) y espumas ignífugas (SAME-R Pyrell) [1, 2].
+   - 50 pts: Combustibles líquidos o gaseosos que actúan como proxies de materiales sólidos o fluidos técnicos (ACME BRE, FLEX-2) [1, 2].
+   - 0 pts (Descarte): Registros de ruido (PSI-181, PSI-108) -> Fuerza IRL_i = 0 y oculta el registro de los rankings de seguridad [2].
+
+(Nota: Cuando se incorporen futuros datasets de LUCI y FM2 con ensayos reales en gravedad lunar 0.16g, S_grav recibirá un multiplicador de prioridad máxima [1]).
+================================================================================
