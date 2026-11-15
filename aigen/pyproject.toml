@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=69.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flame-in-freefall"
+version = "0.1.0"
+description = "NASA PSI microgravity combustion evidence explorer and AI synthesis dashboard."
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit>=1.42.0",
+    "pandas>=2.2.0",
+    "plotly>=5.24.0",
+    "google-genai>=1.0.0",
+    "pydantic>=2.9.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["aigen*"]
