@@ -9,7 +9,7 @@ import sys
 import tomllib
 import zipfile
 
-from openai import APIError
+from google.genai.errors import APIError
 import pandas as pd
 import plotly.express as px
 import streamlit as st
