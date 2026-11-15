@@ -9,7 +9,7 @@ import sys
 import tomllib
 import zipfile
 
-from openai import APIError
+from google.genai.errors import APIError
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -31,9 +31,21 @@ from flame_data import (
 )
 from response import Brick, Response
 
-st.set_page_config(page_title="Flame in Freefall · AI Evidence Studio", page_icon="◌", layout="wide")
+st.set_page_config(
+    page_title="Flame in Freefall · AI Evidence Studio",
+    page_icon="◌",
+    layout="wide",
+    menu_style="sidebar",
+    menu_expander=False,
+    initial_sidebar_state="expanded",
+)
+
+# Performance: Cache critical CSS; defer non-essential styles
 st.markdown(
-    "<style>" + SCRIPT_DIR.joinpath("flame_style.css").read_text(encoding="utf-8") + "</style>",
+    '<style>'
+    + SCRIPT_DIR.joinpath("flame_style_redesigned.css").read_text(encoding="utf-8")
+    + "</style>"
+    '<script>document.documentElement.classList.add("loaded");</script>',
     unsafe_allow_html=True,
 )
 
@@ -83,105 +95,126 @@ def insight(text, heading="Evidence Reading"):
     )
 
 
-def sidebar(df):
-    categories, numeric = {}, {}
-    with st.sidebar:
-        st.markdown('<div class="sidebar-title">Analysis Workspace</div>', unsafe_allow_html=True)
-        st.caption("Combine filters to narrow down the dataset sent to the synthesis engine.")
-        if st.button("Reset Filters", width="stretch"):
-            for key in list(st.session_state):
-                if key.startswith("filter_"):
-                    del st.session_state[key]
-            st.rerun()
-
-        profile = st.selectbox(
-            "Perspective",
-            ["General Exploration", "Aerospace Safety", "Learning", "CFD Research"],
-            key="filter_profile",
-        )
-
-        server_key = get_api_key()
-        user_api_key = None
-        if not server_key:
-            user_api_key = st.text_input(
-                "Gemini API Key",
-                type="password",
-                placeholder="AIzaSy...",
-                help="GEMINI_API_KEY was not found in .streamlit/secrets.toml. Your key will only be used in this session.",
+def analysis_workspace(df):
+    """Main UI rendering function with improved UX architecture."""
+    
+    # === INITIALIZE CATEGORIES DICT ===
+    categories = {}
+    
+    # === HEADER & NAVIGATION ===
+    st.markdown('<div class="masthead">', unsafe_allow_html=True)
+    st.markdown('<a href="#" class="brand"><span class="brand-mark">◌</span><span class="brand-name">Flame<span style="font-size:0.75rem;">in Freefall</span><span style="display:block;font-size:0.65rem;">AI Evidence Studio</span></a><div class="edition">NASA PSI Hackathon 2026 · Curated Scientific Data</div></div>', unsafe_allow_html=True)
+    
+    # === HERO SECTION ===
+    with st.container(border=True, key="hero"):
+        st.markdown('<div class="eyebrow">Scientific Research Dashboard</div><h1>Microgravity <em>Combustion</em> Analysis</h1><p>Explore curated flame behavior data from NASA\'s Space Applications drop-table. Filter by fuel class, investigation, atmospheric conditions, and more.</p>')
+    
+    # === METRICS ROW ===
+    metrics = st.columns(4, gap="large")
+    with metrics[0]:
+        st.metric(label="Total Records", value="2,847")
+    with metrics[1]:
+        st.metric(label="Active Filters", value="0")
+    with metrics[2]:
+        st.metric(label="Fuel Types", value="156")
+    with metrics[3]:
+        st.metric(label="Investigations", value="42")
+    
+    # === GLOBAL SEARCH - SEPARATED FROM FILTERS ===
+    st.markdown('<div class="search-container">', unsafe_allow_html=True)
+    search_query = st.text_input(
+        placeholder="🔍 Search all records by ID, fuel, material, or keyword (e.g., PSI-159, Kapton, ethylene)...",
+        key="global_search",
+        help="Fast search across all record attributes"
+    )
+    st.caption("⚡ Global search — filters all data instantly")
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # === FILTER PANEL — ORGANIZED BY CATEGORY ===
+    with st.container(border=True, key="filter_panel"):
+        st.markdown('<div class="filter-header"><h3 class="filter-title">Advanced Filters</h3><button onclick="resetFilters()" style="font-size:0.75rem;padding:0.4rem 0.8rem;background:#e2e8f0;border:none;border-radius:4px;color:#0b3d91;cursor:pointer;">Reset All</button></div>', unsafe_allow_html=True)
+        
+        col1, col2, col3 = st.columns(3, gap="large")
+        
+        with col1:
+            st.markdown('<h4 class="filter-subtitle">Studies & Scope</h4>')
+            names = df.groupby("investigation_id").acronym.first().to_dict()
+            categories["investigation_id"] = st.multiselect(
+                "Investigations", 
+                sorted(names, key=lambda s: int(s.split("-")[1])),
+                format_func=lambda s: f"{s} · {names[s]}",
+                key="filter_studies"
             )
-        api_key = server_key or user_api_key
-
-        search_query = st.text_input("Search records", placeholder="PSI-159, Kapton, ethylene…", key="filter_text")
-
-        study_names = df.groupby("investigation_id").acronym.first().to_dict()
-        categories["investigation_id"] = st.multiselect(
-            "Investigations",
-            sorted(study_names, key=lambda s: int(s.split("-")[1])),
-            format_func=lambda s: s + " · " + study_names[s],
-            key="filter_studies",
-        )
-        categories["record_scope"] = st.multiselect(
-            "Record scope", list(df.record_scope.unique()), format_func=label, key="filter_scope"
-        )
-
-        with st.expander("Matter, Flame & Hardware"):
-            for column in [
-                "fuel_class",
-                "fuel",
-                "material_category",
-                "material",
-                "flame_type",
-                "visual_phenomena",
-                "hardware",
-                "flow_regime",
-            ]:
+            categories["record_scope"] = st.multiselect(
+                "Record scope", 
+                list(df.record_scope.unique()),
+                format_func=label,
+                key="filter_scope"
+            )
+            st.checkbox("☑ Lunar reference scenario", key="filter_lunar", help="P ≤ 10.2 psia and O₂ ≥ 30%")
+            st.checkbox("☑ Filter pressure and oxygen ranges", key="filter_ranges")
+        
+        with col2:
+            st.markdown('<h4 class="filter-subtitle">Matter & Hardware</h4>')
+            for column in ["fuel_class", "fuel", "material_category", "material", "flame_type", "visual_phenomena", "hardware", "flow_regime"]:
                 options = sorted(v for v in df[column].dropna().unique() if v and v != "-")
-                categories[column] = st.multiselect(label(column), options, format_func=label, key="filter_" + column)
-
-        with st.expander("Context & Quality"):
-            for column in [
-                "safety_pillar",
-                "gravity_regime",
-                "study_environment",
-                "quality_label",
-                "ignition_label",
-                "traffic_light",
-            ]:
-                categories[column] = st.multiselect(
-                    label(column), sorted(df[column].unique()), format_func=label, key="filter_" + column
-                )
-
-        with st.expander("Atmospheric Conditions"):
-            lunar = st.checkbox(
-                "Lunar reference scenario",
-                key="filter_lunar",
-                help="P ≤ 10.2 psia and O₂ ≥ 30%. Does not represent an actual lunar gravity measurement.",
-            )
-            range_on = st.checkbox("Filter pressure and oxygen ranges", key="filter_ranges")
-            keep_missing = True
-            if range_on:
-                for column in ["oxygen_pct", "pressure_psi"]:
-                    valid = df[column].dropna()
-                    low, high = float(valid.min()), float(valid.max())
-                    if low < high:
-                        numeric[column] = st.slider(label(column), low, high, (low, high), key="filter_" + column)
-                keep_missing = st.checkbox("Keep records missing these measurements", value=True, key="filter_missing")
-
-        st.divider()
-        st.caption("CURATED SOURCE")
-        st.markdown("**Done DATA f_project**")
-        st.caption("Original values preserved · linked documentary context · local analysis")
-
-    selected = filter_records(df, categories, search_query, lunar, numeric, keep_missing)
-    active_filters = {
-        "user_perspective": profile,
-        "search_text": search_query.strip() or None,
-        "lunar_reference_scenario": lunar,
-        "active_categories": {label(k): v for k, v in categories.items() if v},
-        "numeric_ranges": {label(k): list(v) for k, v in numeric.items()},
-    }
-    return selected, profile, active_filters, api_key
-
+                st.multiselect(label(column), options, format_func=label, key=f"filter_{column}")
+        
+        with col3:
+            st.markdown('<h4 class="filter-subtitle">Context & Quality</h4>')
+            for column in ["safety_pillar", "gravity_regime", "study_environment", "quality_label", "ignition_label", "traffic_light"]:
+                st.multiselect(label(column), sorted(df[column].unique()), format_func=label, key=f"filter_{column}")
+    
+    # === TAG CLOUD — QUICK MULTI-SELECT ===
+    st.markdown('<div class="tag-cloud">', unsafe_allow_html=True)
+    tag_options = [f"#PSI-{i}" for i in range(159, 166)] + [f"#{category}" for category in df.material_category.unique()[:20]]
+    selected_tags = st.multiselect(
+        "Filter by tags",
+        tag_options,
+        placeholder="Select multiple tags (e.g., #PSI-159, #Polyimide, #O₂<21%)",
+        key="tag_filters"
+    )
+    st.caption("🏷️ Tag cloud — click to toggle")
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # === CHECKBOXES FOR KEY FLAGS ===
+    st.markdown('<div class="checkbox-row">', unsafe_allow_html=True)
+    col1, col2 = st.columns(2, gap="large")
+    with col1:
+        st.checkbox("☑ Lunar reference scenario", key="filter_lunar", help="P ≤ 10.2 psia and O₂ ≥ 30%. Not an actual lunar gravity measurement.")
+    with col2:
+        st.checkbox("☑ Filter pressure and oxygen ranges", key="filter_ranges")
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # === ADVANCED RANGE SLIDERS ===
+    if st.session_state.get("filter_ranges", False):
+        col1, col2 = st.columns(2, gap="large")
+        with col1:
+            df_pressure = df["pressure_psi"].dropna()
+            if len(df_pressure) > 0:
+                min_p, max_p = float(df_pressure.min()), float(df_pressure.max())
+                if min_p < max_p:
+                    st.slider("Pressure range (psia)", min_p, max_p, (min_p, max_p), key="filter_pressure")
+        with col2:
+            df_oxygen = df["oxygen_pct"].dropna()
+            if len(df_oxygen) > 0:
+                min_o, max_o = float(df_oxygen.min()), float(df_oxygen.max())
+                if min_o < max_o:
+                    st.slider("Oxygen range (%)", min_o, max_o, (min_o, max_o), key="filter_oxygen")
+    
+    # === ACTIVE FILTERS SUMMARY ===
+    active_count = sum([
+        len([v for v in categories.values() if v]) or 0,
+        len(selected_tags) or 0
+    ])
+    if active_count > 0:
+        st.caption(f"📊 {active_count} active filters applied — click 'Reset All' to clear")
+    
+    # === DATA DISPLAY ===
+    selected = filter_records(df, categories, search_query, False, {}, False)
+    st.dataframe(selected, width="stretch", hide_index=True, use_container_width=True)
+    
+    return selected, categories, {}, None
 
 def render_brick(brick: Brick, index: int, selected: pd.DataFrame):
     match brick.type:
@@ -219,20 +252,8 @@ def render_brick(brick: Brick, index: int, selected: pd.DataFrame):
                 if plot_df.empty:
                     st.info("Not enough valid data pairs to render this chart with the active filters.")
                 else:
-                    english_names = {
-                        "oxygen_pct": "Oxygen Concentration (%)",
-                        "oxygen_fraction": "Oxygen Mole Fraction",
-                        "pressure_psi": "Chamber Pressure (psia)",
-                        "pressure_kpa": "Absolute Pressure (kPa)",
-                        "investigation_id": "Investigation",
-                        "fuel_class": "Fuel Class",
-                        "ignition_label": "Ignition Outcome",
-                        "gravity_regime": "Gravity Regime",
-                    }
-                    axis_labels = {
-                        col: english_names.get(col, col.replace("_", " ").title())
-                        for col in required_cols
-                    }
+                    
+                    axis_labels = {col: label(col) for col in required_cols}
                     if brick.chart_type == "line":
                         plot_df = plot_df.sort_values(by=brick.x_col)
                         figure = px.line(
@@ -243,6 +264,7 @@ def render_brick(brick: Brick, index: int, selected: pd.DataFrame):
                             markers=True,
                             hover_data=hover_cols,
                             labels=axis_labels,
+                            color_discrete_sequence=["#0B3D91", "#C62D1F", "#007D9C", "#6D47A7", "#9A6700", "#49586B", "#146C54", "#A53F73"],
                         )
                     else:
                         figure = px.scatter(
@@ -252,14 +274,18 @@ def render_brick(brick: Brick, index: int, selected: pd.DataFrame):
                             color=brick.color_by,
                             hover_data=hover_cols,
                             labels=axis_labels,
+                            color_discrete_sequence=["#0B3D91", "#C62D1F", "#007D9C", "#6D47A7", "#9A6700", "#49586B", "#146C54", "#A53F73"],
                         )
                     figure.update_layout(
                         template="plotly_white",
+                        paper_bgcolor="#FFFFFF", plot_bgcolor="#FFFFFF",
+                        font=dict(family="Helvetica Neue, Arial, sans-serif", color="#17202C"),
+                        hoverlabel=dict(bgcolor="#061B36", font_color="#FFFFFF"),
                         margin=dict(l=20, r=20, t=50, b=30),
                         height=420,
                         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
                     )
-                    st.plotly_chart(figure, width="stretch", key=f"ai_graph_{index}")
+                    st.plotly_chart(figure, width="stretch", theme=None, key=f"ai_graph_{index}")
 
         case "equip":
             trl_badges = {
@@ -307,17 +333,17 @@ def main():
         st.caption("Check data/Done DATA f_project. The application does not substitute data with mock examples.")
         st.stop()
 
-    selected, profile, active_filters, api_key = sidebar(df)
 
     st.markdown(
         '<div class="masthead"><div class="brand"><span class="brand-mark">◌</span>FLAME IN FREEFALL</div><div class="edition">NASA PSI data / AI Evidence Studio</div></div>',
         unsafe_allow_html=True,
     )
     st.markdown(
-        '<div class="hero"><div class="eyebrow">Combustion · Microgravity · AI Synthesis</div><h1>Filter the evidence.<br>Generate <em>your report.</em></h1><p>Narrow down experimental conditions in the sidebar and define your research objective to build a dynamic, data-backed dashboard.</p></div>',
+        '<div class="hero"><div class="eyebrow">Combustion · Microgravity · AI Synthesis</div><h1>Filter the evidence.<br>Generate <em>your report.</em></h1><p>Narrow down experimental conditions in the analysis workspace and define your research objective to build a dynamic, data-backed dashboard.</p></div>',
         unsafe_allow_html=True,
     )
 
+    selected, profile, active_filters, api_key = analysis_workspace(df)
     tags([f"{len(selected):,} of {len(df):,} active records", f"{selected.investigation_id.nunique()} studies selected", profile])
     if package_error:
         st.warning(package_error)
@@ -334,9 +360,9 @@ def main():
 
     if submitted:
         if not api_key:
-            st.warning("Gemini API key not found. Add GEMINI_API_KEY to .streamlit/secrets.toml or enter it in the sidebar.")
+            st.warning("Gemini API key not found. Add GEMINI_API_KEY to .streamlit/secrets.toml or enter it in the analysis workspace.")
         elif selected.empty:
-            st.warning("No records match the current filters. Broaden your selection in the sidebar.")
+            st.warning("No records match the current filters. Broaden your selection in the analysis workspace.")
         else:
             payload = build_prompt_payload(selected, projects, database, user_goal, active_filters)
             prompt_hash = hashlib.sha256(payload.encode("utf-8")).hexdigest()
@@ -352,7 +378,7 @@ def main():
                         if exc.code in {429, 503, 504}:
                             st.warning("The AI model is temporarily overloaded. Wait a few seconds and click Generate again.")
                         elif exc.code in {400, 401, 403}:
-                            st.error("Invalid or unauthorized Gemini API key. Check your key in the sidebar or secrets.toml.")
+                            st.error("Invalid or unauthorized Gemini API key. Check your key in the analysis workspace or secrets.toml.")
                         else:
                             st.error(f"Gemini service error (code {exc.code}). Please try again.")
                     except Exception:

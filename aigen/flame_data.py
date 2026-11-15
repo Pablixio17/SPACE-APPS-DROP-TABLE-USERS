@@ -19,9 +19,9 @@ import zipfile
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data" / "Done DATA f_project"
-CSV_PATH = DATA / "CSV DE LOS DATOS PERFECTAMENTE ORDENADOS.csv"
-PACKAGE_PATH = DATA / "PROJECT_MASTER_PACKAGE.zip"
+DATA = ROOT / "data"
+CSV_PATH = DATA / "processed" / "experiments.csv"
+PACKAGE_PATH = DATA / "processed" / "PROJECT_MASTER_PACKAGE.zip"
 
 METRICS = {
     "oxygen_pct": "Oxygen · %",
